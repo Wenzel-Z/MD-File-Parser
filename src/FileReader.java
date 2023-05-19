@@ -1,4 +1,5 @@
 package src;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Queue;
@@ -12,9 +13,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.KeyException;
 
 /**
- * 
  * Class used for reading and sorting md files present in the directory tree
- * 
+ *
+ * @author Zach
  */
 public class FileReader {
 
@@ -25,7 +26,6 @@ public class FileReader {
      * @param   baseDirectory  the base directory of the file tree to search
      * @param   flag           the flag to indicate the sorting of the ArrayList
      * @return                 ArrayList of md file objects
-     * 
      * @throws  FileNotFoundException   when file is unable to be found
      */
     protected static ArrayList<File> getAllFiles(String baseDirectory, String flag) throws FileNotFoundException, KeyException {
@@ -55,7 +55,7 @@ public class FileReader {
             if (mdFiles != null) {
                 for (File file : mdFiles) {
                     if(file.getName().endsWith(".md")) {
-                        files.add(file);  
+                        files.add(file);
                     }
                 }
             }
@@ -77,18 +77,7 @@ public class FileReader {
      * @param sortByCreation    Boolean for sorting by creation date or last modified time
      */
     private static void sortByAttr(ArrayList<File> files, Boolean sortByCreation) {
-        ArrayList<BasicFileAttributes> attributes = new ArrayList<BasicFileAttributes>();
-
-        // Create attributes ArrayList
-        for (File file : files) {
-            Path path = Path.of(file.getAbsolutePath());
-            try {
-                BasicFileAttributes attribute = Files.readAttributes(path, BasicFileAttributes.class);   
-                attributes.add(attribute);
-            } catch (IOException e) {
-                System.err.println("ERROR: Unable to read attributes of files");
-            }
-        }
+        ArrayList<BasicFileAttributes> attributes = createAttributes(files);
 
         // Use attributes to sort file ArrayList
         for (int i = 0; i < files.size() - 1; i++) {
@@ -109,6 +98,27 @@ public class FileReader {
     }
 
     /**
+     * Creates arraylist of attributes from an arraylist of files
+     *
+     * @param files     files to get attributes from
+     * @return          arraylist of attributes
+     */
+    private static ArrayList<BasicFileAttributes> createAttributes(ArrayList<File> files) {
+        ArrayList<BasicFileAttributes> attributes = new ArrayList<>();
+
+        for (File file : files) {
+            Path path = Path.of(file.getAbsolutePath());
+            try {
+                BasicFileAttributes attribute = Files.readAttributes(path, BasicFileAttributes.class);
+                attributes.add(attribute);
+            } catch (IOException e) {
+                System.err.println("ERROR: Unable to read attributes of files");
+            }
+        }
+        return attributes;
+    }
+
+    /**
      * Helper function for sort, used to switch elements in both arrays
      * 
      * @param files         arraylist of files being sorted      
@@ -117,7 +127,7 @@ public class FileReader {
      * @param file2Attr     attribute being sorted used in comparison
      * @param j             int of index
      */
-    private static void swap(ArrayList<File> files, ArrayList<BasicFileAttributes> attributes, 
+    private static void swap(ArrayList<File> files, ArrayList<BasicFileAttributes> attributes,
                             BasicFileAttributes file1Attr, BasicFileAttributes file2Attr, int j) {
         File file1 = files.get(j);
         File file2 = files.get(j+1);
