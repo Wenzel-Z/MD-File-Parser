@@ -1,2 +1,2 @@
-# mdfileParser
-Markdown file parser used for summarizing notes
+# MD File Parser
+- Markdown file parser used for summarizing notes
